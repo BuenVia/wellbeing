@@ -20,13 +20,13 @@ public class UserResource {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/all")
     public ResponseEntity<List<User>> getUsers() {
         List<User> userList = userService.findAll();
         return ResponseEntity.ok(userList);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUserId(@PathVariable Long id) {
         try {
             User user = userService.findById(id);
@@ -36,7 +36,7 @@ public class UserResource {
         }
     }
 
-    @PostMapping("/user")
+    @PostMapping("/new")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             User createdUser = userService.save(user);

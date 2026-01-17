@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/exercise")
+@RequestMapping("/exercise")
 public class ExerciseResource {
 
     private final ExerciseService exerciseService;
@@ -30,7 +30,7 @@ public class ExerciseResource {
         }
     }
 
-    @GetMapping("/exercises/{exerciseId}")
+    @GetMapping("/{exerciseId}")
     public ResponseEntity<Exercise> getExerciseById(@PathVariable Long exerciseId) {
         try {
             Exercise exercise = exerciseService.getByExerciseId(exerciseId);
@@ -40,7 +40,7 @@ public class ExerciseResource {
         }
     }
 
-    @GetMapping("/exercises")
+    @GetMapping("/all")
     public ResponseEntity<List<Exercise>> getAllExercises() {
         try {
             List<Exercise> exerciseList = exerciseService.getAllExercises();
@@ -50,7 +50,7 @@ public class ExerciseResource {
         }
     }
 
-    @PostMapping("/exercise")
+    @PostMapping("/new")
     public ResponseEntity<Exercise> createUser(@RequestBody Exercise exercise) {
         try {
             Exercise createdExercise = exerciseService.save(exercise);
