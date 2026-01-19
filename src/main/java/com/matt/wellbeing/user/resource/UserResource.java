@@ -4,6 +4,7 @@ import com.matt.wellbeing.dateTracking.model.DateTracking;
 import com.matt.wellbeing.dateTracking.service.DateTrackingService;
 import com.matt.wellbeing.exercise.model.Exercise;
 import com.matt.wellbeing.exercise.service.ExerciseService;
+import com.matt.wellbeing.user.dao.ExerciseDateGroup;
 import com.matt.wellbeing.user.model.ExerciseDate;
 import com.matt.wellbeing.user.model.User;
 import com.matt.wellbeing.user.service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.Map;
@@ -35,6 +38,7 @@ public class UserResource {
 
     // Get all users
     @GetMapping("/all")
+    @CrossOrigin
     public ResponseEntity<List<User>> getUsers() {
         List<User> userList = userService.findAll();
         return ResponseEntity.ok(userList);
@@ -82,6 +86,7 @@ public class UserResource {
 
     // Get all user exercises AND dates
     @GetMapping("/{userId}/exercises")
+    @CrossOrigin
     public ResponseEntity<List<ExerciseDate>> getAllUserExercises(@PathVariable Long userId) {
         try {
             User user = userService.findById(userId);
@@ -107,6 +112,43 @@ public class UserResource {
                     .toList();
 
             return ResponseEntity.ok(exerciseDateList);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Get all user exercises and dates grouped by dates
+    @GetMapping("/{userId}/exercises-by-date")
+    @CrossOrigin
+    public ResponseEntity<List<ExerciseDateGroup>> getAllUserExercisesGroupedByDate(@PathVariable Long userId) {
+        try {
+            List<DateTracking> dateTrackingList = dateTrackingService.getDatesByUserId(userId);
+            List<Exercise> exerciseList = exerciseService.getAllExercises();
+
+            Map<Long, Exercise> exerciseMap =
+                    exerciseList.stream().collect(
+                            Collectors.toMap(
+                                    Exercise::getId,
+                                    Function.identity()
+                            )
+                    );
+
+            Map<LocalDate, List<ExerciseDate>> groupeMap =
+                    dateTrackingList.stream()
+                            .map(date -> new ExerciseDate(
+                                    exerciseMap.get(date.getExerciseId()),
+                                    date
+                            ))
+                            .filter(ed -> ed.getExercise() != null)
+                            .collect(Collectors.groupingBy(ed -> ed.getDateTracking().getDate()));
+
+            List<ExerciseDateGroup> result = groupeMap.entrySet().stream()
+                    .map(entry -> new ExerciseDateGroup(entry.getKey(), entry.getValue()))
+                    .sorted(Comparator.comparing(ExerciseDateGroup::getDate))
+                    .toList();
+
+            return ResponseEntity.ok(result);
 
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

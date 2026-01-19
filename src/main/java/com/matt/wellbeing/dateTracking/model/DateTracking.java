@@ -2,6 +2,7 @@ package com.matt.wellbeing.dateTracking.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,7 +12,7 @@ public class DateTracking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String date;
+    private LocalDate date;
     private Long userId;
     private Long exerciseId;
 
@@ -20,7 +21,7 @@ public class DateTracking {
 
     public DateTracking() {}
 
-    public DateTracking(String date, Long userId, Long exerciseId) {
+    public DateTracking(LocalDate date, Long userId, Long exerciseId) {
         this.date = date;
         this.userId = userId;
         this.exerciseId = exerciseId;
@@ -39,11 +40,11 @@ public class DateTracking {
         this.id = id;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

@@ -16,7 +16,7 @@ public class ExerciseDate {
         return exercise;
     }
 
-    public void setExercise(Exercise exercise) {
-        this.exercise = exercise;
+    public DateTracking getDateTracking() {
+        return dateTracking;
     }
 }
