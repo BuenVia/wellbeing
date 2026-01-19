@@ -25,32 +25,31 @@ public class UserService {
         return userDao.save(user);
     }
 
-    public void deleteById(Long id) {
-        userDao.deleteById(id);
+    public User updateUser(Long userId, User userData) {
+        if (userId == null) {
+            throw new IllegalArgumentException("ID is mandatory.");
+        }
+        User userToUpdate = userDao.findById(userId).orElse(null);
+        if (userToUpdate == null) {
+            throw new IllegalArgumentException("No user found with this ID.");
+        }
+
+        userToUpdate.setFirstName(userData.getFirstName());
+        userToUpdate.setLastName(userData.getLastName());
+        return userDao.save(userToUpdate);
+
     }
-//    private final UserDao userDao;
-//
-//    @Autowired
-//    public UserService(UserDao userDao) { this.userDao = userDao; }
-//
-//    public List<User>getAllUsers() {
-//        return userDao.findAll();
-//    }
-//
-//    public User getUserById(Long id) {
-//        User user = userDao.findById(id);
-//        if (user == null) {
-//            throw new RuntimeException("User not found with id: " + id);
-//        }
-//        return user;
-//    }
-//
-//    public User createUser(User user) {
-//        if (user.getFirst_name() == null || user.getFirst_name().isEmpty()
-//        || user.getLast_name() == null || user.getLast_name().isEmpty()) {
-//            throw new IllegalArgumentException("Both first_name and last_name fields must be included in body.");
-//        }
-//        return userDao.save(user);
-//    }
+
+    public User delete(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("ID is mandatory.");
+        }
+        User userToDelete = userDao.findById(userId).orElse(null);
+        if (userToDelete == null) {
+            throw new IllegalArgumentException("No user found with this ID.");
+        }
+        userDao.delete(userToDelete);
+        return userToDelete;
+    }
 
 }

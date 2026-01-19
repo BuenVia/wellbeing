@@ -2,6 +2,8 @@ package com.matt.wellbeing.user.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -10,16 +12,22 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createdAt;
 
     // No-arg constructor (required by JPA)
     public User() {
     }
 
     // Constructor with parameters
-    public User(Long id, String firstName, String lastName) {
-        this.id = id;
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
     // Getters and Setters
@@ -45,5 +53,9 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

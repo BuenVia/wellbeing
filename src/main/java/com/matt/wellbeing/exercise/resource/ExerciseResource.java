@@ -20,16 +20,7 @@ public class ExerciseResource {
         this.exerciseService = exerciseService;
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Exercise>> getExerciseByUser(@PathVariable Long userId) {
-        try {
-            List<Exercise> exerciseList = exerciseService.getByUserId(userId);
-            return ResponseEntity.ok(exerciseList);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
+    // Get specific exercise
     @GetMapping("/{exerciseId}")
     public ResponseEntity<Exercise> getExerciseById(@PathVariable Long exerciseId) {
         try {
@@ -40,6 +31,7 @@ public class ExerciseResource {
         }
     }
 
+    // Get all exercises
     @GetMapping("/all")
     public ResponseEntity<List<Exercise>> getAllExercises() {
         try {
@@ -50,15 +42,36 @@ public class ExerciseResource {
         }
     }
 
+    // Create new exercise
     @PostMapping("/new")
     public ResponseEntity<Exercise> createUser(@RequestBody Exercise exercise) {
         try {
             Exercise createdExercise = exerciseService.save(exercise);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdExercise);
         } catch (IllegalArgumentException e) {
-            System.out.println("\n\n\nerror\n\n\n");
             return ResponseEntity.badRequest().build();
         }
     }
 
+    // Update an exercise
+    @PutMapping("/update/{exerciseId}")
+    public ResponseEntity<Exercise> updateExercise(@PathVariable Long exerciseId, @RequestBody Exercise exercise) {
+        try {
+            Exercise exerciseToUpdate = exerciseService.updateExercise(exerciseId, exercise);
+            return ResponseEntity.ok(exerciseToUpdate);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Delete an exercise
+    @DeleteMapping("/delete/{exerciseId}")
+    public ResponseEntity<Exercise> deleteExercise(@PathVariable Long exerciseId) {
+        try {
+            Exercise deleteExercise = exerciseService.deleteExercise(exerciseId);
+            return ResponseEntity.ok(deleteExercise);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -2,6 +2,8 @@ package com.matt.wellbeing.exercise.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "exercises")
 public class Exercise {
@@ -10,23 +12,23 @@ public class Exercise {
     private  Long id;
     private String name;
     private String description;
-    private String date;
     private String type;
-    private String createdAt;
-    private Long userId;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     // No-arg constructor (required by JPA)
     public Exercise() {
     }
 
-    public Exercise(Long id, String name, String description, String date, String type, String createdAt, Long userId) {
-        this.id = id;
+    public Exercise(String name, String description, String type) {
         this.name = name;
         this.description = description;
-        this.date = date;
         this.type = type;
-        this.createdAt = createdAt;
-        this.userId = userId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -53,14 +55,6 @@ public class Exercise {
         this.description = description;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getType() {
         return type;
     }
@@ -69,19 +63,7 @@ public class Exercise {
         this.type = type;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(String created_at) {
-        this.createdAt = created_at;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

@@ -22,21 +22,40 @@ public class ExerciseService {
         return exercise;
     }
 
-    public List<Exercise> getByUserId(Long userId) {
-        List<Exercise> exercisesByUser = exerciseDao.findByUserId(userId);
-        if (exercisesByUser == null) {
-            throw new RuntimeException("Could not find exercises for user: " + userId);
-        }
-        return exercisesByUser;
-    }
-
     public List<Exercise> getAllExercises() { return exerciseDao.findAll(); }
 
     public Exercise save(Exercise exercise) {
-        if (exercise.getUserId() == null) {
+        if (exercise.getName() == null || exercise.getType() == null) {
             throw new IllegalArgumentException("User ID is mandatory.");
         }
         return exerciseDao.save(exercise);
+    }
+
+    public Exercise updateExercise(Long exerciseId, Exercise exercise) {
+        if (exerciseId == null) {
+            throw new IllegalArgumentException("ExerciseId is mandatory");
+        }
+        Exercise exerciseToUpdate = exerciseDao.findById(exerciseId).orElse(null);
+        if (exerciseToUpdate == null) {
+            throw new IllegalArgumentException("Exercise not found with this ID");
+        }
+
+        exerciseToUpdate.setName(exercise.getName());
+        exerciseToUpdate.setDescription(exercise.getDescription());
+        exerciseToUpdate.setType(exercise.getType());
+        return exerciseDao.save(exerciseToUpdate);
+    }
+
+    public Exercise deleteExercise(Long exerciseId) {
+        if (exerciseId == null) {
+            throw new IllegalArgumentException("Id is mandatory");
+        }
+        Exercise exerciseToDelete = exerciseDao.findById(exerciseId).orElse(null);
+        if(exerciseToDelete == null) {
+            throw new IllegalArgumentException("No exercise found");
+        }
+        exerciseDao.delete(exerciseToDelete);
+        return exerciseToDelete;
     }
 
 }
