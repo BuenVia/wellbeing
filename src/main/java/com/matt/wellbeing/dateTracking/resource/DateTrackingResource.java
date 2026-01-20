@@ -64,6 +64,7 @@ public class DateTrackingResource {
 
     // Create new date
     @PostMapping("/new")
+    @CrossOrigin
     public ResponseEntity<DateTracking> createUser(@RequestBody DateTracking date) {
         try {
             DateTracking createdExercise = dateTrackingService.save(date);

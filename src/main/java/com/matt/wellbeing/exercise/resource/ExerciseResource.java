@@ -22,6 +22,7 @@ public class ExerciseResource {
 
     // Get specific exercise
     @GetMapping("/{exerciseId}")
+    @CrossOrigin
     public ResponseEntity<Exercise> getExerciseById(@PathVariable Long exerciseId) {
         try {
             Exercise exercise = exerciseService.getByExerciseId(exerciseId);
@@ -33,6 +34,7 @@ public class ExerciseResource {
 
     // Get all exercises
     @GetMapping("/all")
+    @CrossOrigin
     public ResponseEntity<List<Exercise>> getAllExercises() {
         try {
             List<Exercise> exerciseList = exerciseService.getAllExercises();
@@ -44,6 +46,7 @@ public class ExerciseResource {
 
     // Create new exercise
     @PostMapping("/new")
+    @CrossOrigin
     public ResponseEntity<Exercise> createUser(@RequestBody Exercise exercise) {
         try {
             Exercise createdExercise = exerciseService.save(exercise);
@@ -55,6 +58,7 @@ public class ExerciseResource {
 
     // Update an exercise
     @PutMapping("/update/{exerciseId}")
+    @CrossOrigin
     public ResponseEntity<Exercise> updateExercise(@PathVariable Long exerciseId, @RequestBody Exercise exercise) {
         try {
             Exercise exerciseToUpdate = exerciseService.updateExercise(exerciseId, exercise);
@@ -66,6 +70,7 @@ public class ExerciseResource {
 
     // Delete an exercise
     @DeleteMapping("/delete/{exerciseId}")
+    @CrossOrigin
     public ResponseEntity<Exercise> deleteExercise(@PathVariable Long exerciseId) {
         try {
             Exercise deleteExercise = exerciseService.deleteExercise(exerciseId);
